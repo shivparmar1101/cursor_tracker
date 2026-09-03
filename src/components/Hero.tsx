@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTypewriter } from '../hooks/useTypewriter'
 
 const TYPEWRITER_TEXT = 'Glad you stopped in. Good taste tends to find us. Now, what are we building?'
@@ -24,8 +24,6 @@ function CopyIcon() {
 export default function Hero() {
   const { displayed, done } = useTypewriter(TYPEWRITER_TEXT, 38, 600)
   const [pillsVisible, setPillsVisible] = useState(false)
-  const [copied, setCopied] = useState(false)
-
   useEffect(() => {
     const t = setTimeout(() => setPillsVisible(true), 400)
     return () => clearTimeout(t)
@@ -33,8 +31,6 @@ export default function Hero() {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(EMAIL)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
