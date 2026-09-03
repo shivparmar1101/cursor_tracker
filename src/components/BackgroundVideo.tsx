@@ -4,7 +4,7 @@ const SENSITIVITY = 0.8
 
 export default function BackgroundVideo() {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const prevPosRef = useRef<{ x: number; y: number } | null>(null)
+  const prevXRef = useRef<number | null>(null)
   const targetTimeRef = useRef(0)
   const seekingRef = useRef(false)
 
@@ -28,16 +28,13 @@ export default function BackgroundVideo() {
 
     const onMouseMove = (e: MouseEvent) => {
       if (!video.duration || isNaN(video.duration)) return
-      if (prevPosRef.current === null) {
-        prevPosRef.current = { x: e.clientX, y: e.clientY }
+      if (prevXRef.current === null) {
+        prevXRef.current = e.clientX
         return
       }
-      const deltaX = e.clientX - prevPosRef.current.x
-      const deltaY = e.clientY - prevPosRef.current.y
-      prevPosRef.current = { x: e.clientX, y: e.clientY }
-      const combinedDelta = (deltaX + deltaY) / 2
-      const avgAxis = (window.innerWidth + window.innerHeight) / 2
-      const offset = (combinedDelta / avgAxis) * SENSITIVITY * video.duration
+      const delta = e.clientX - prevXRef.current
+      prevXRef.current = e.clientX
+      const offset = (delta / window.innerWidth) * SENSITIVITY * video.duration
       targetTimeRef.current = Math.max(0, Math.min(video.duration, targetTimeRef.current + offset))
       if (!seekingRef.current) {
         seekingRef.current = true
